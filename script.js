@@ -15,20 +15,8 @@ const ROOM_RATES = {
     suite: 200
 };
 
-// Calculate nights based on selected dates
-function calculateNights() {
-    if (!checkIn.value || !checkOut.value) return 0;
-
-    const start = new Date(checkIn.value);
-    const end = new Date(checkOut.value);
-
-    const diffTime = end - start; 
-    const nights = diffTime / (1000 * 60 * 60 * 24);
-
-    return nights > 0 ? nights : 0;
-}
-
-function calculateTotal() {
+// Calculate nights based on selected dates   
+    function calculateTotal() {
     const nights = calculateNights();
     const roomTypeValue = roomType.value;
 
@@ -39,6 +27,16 @@ function calculateTotal() {
         return;
     }
 
+    const rate = ROOM_RATES[roomTypeValue];
+    const basePrice = rate * nights;
+    const tax = basePrice * 0.18;
+    const total = basePrice + tax;
+
+    // 🔹 Нов ред — показваме броя нощувки
+    roomPriceEl.textContent = `$${rate} × ${nights} нощувки = $${basePrice.toFixed(2)}`;
+    taxAmountEl.textContent = `$${tax.toFixed(2)}`;
+    totalPrice.textContent = `$${total.toFixed(2)}`;
+}
     const rate = ROOM_RATES[roomTypeValue];
     const basePrice = rate * nights;
     const tax = basePrice * 0.18;
