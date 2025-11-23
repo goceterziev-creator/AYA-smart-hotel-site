@@ -1,40 +1,86 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏨 Neural Hotel System - AI Powered Booking</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="responsive.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AYA Smart Hotels – AI Concierge Booking</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="neural-nav">
-        <div class="nav-brand">
-            <h2>🏨 Neural Hotels</h2>
-            <span class="ai-badge">AI Powered</span>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Открийте Перфектния Престой</h1>
-            <p>AI-асистирани резервации с интелигентни препоръки</p>
-        </div>
-    </section>
+<!-- 🔹 AYA PREMIUM NAVBAR -->
+<nav class="neural-nav">
+    <div class="nav-brand">
+        <h2>AYA Smart Hotels</h2>
+        <span class="ai-badge">AI Concierge</span>
+    </div>
+</nav>
 
-    <!-- Booking System -->
-    <section class="booking-section">
-        <div class="container">
-            <div class="booking-card neural-glow">
-                <h3>🎯 Резервирайте Вашата Стая</h3>
-                
-                <!-- Room Selection -->
-                <div class="form-group">
-                    <label>🏨 Изберете Стая:</label>
-                    <select id="roomType" class="neural-select">
-                        <option value="standard">Стандартна стая - $80/нощ</option>
+<!-- 🔹 HERO SECTION -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>Открийте Вашия Перфектен Престой</h1>
+        <p>AI-асистирани резервации с лукс, комфорт и интелект</p>
+    </div>
+</header>
+
+<!-- 🔹 BOOKING CARD -->
+<div class="container">
+    <div class="booking-card neural-glow">
+        <h3>🎯 Резервирайте Вашата Стая</h3>
+
+        <label>Изберете Стая:</label>
+        <select id="roomType" class="neural-select">
+            <option value="standard">Стандартна стая - $80/нощ</option>
+            <option value="deluxe">Делукс стая - $120/нощ</option>
+            <option value="suite">Луксозен апартамент - $200/нощ</option>
+        </select>
+
+        <div class="form-group">
+            <label>📅 Дати на престой:</label>
+            <input type="date" id="checkIn" class="neural-input" />
+            <input type="date" id="checkOut" class="neural-input" />
+        </div>
+
+        <div class="form-group">
+            <label>👥 Гости:</label>
+            <input type="number" id="guests" class="neural-input" value="2" min="1" max="4" />
+        </div>
+
+        <div id="aiSuggestion" class="ai-recommendation">
+            🧠 AI Concierge препоръчва: Изберете стая и дати за препоръка.
+        </div>
+
+        <div class="price-summary">
+            <div class="price-line"><span>Цена на стая:</span><span id="roomPrice">$0</span></div>
+            <div class="price-line"><span>Такси и данъци (18%):</span><span id="taxAmount">$0</span></div>
+            <div class="price-total"><span>Общо:</span><span id="totalPrice">$0</span></div>
+        </div>
+
+        <button id="bookBtn" class="neural-btn">🚀 Резервирай Сега</button>
+    </div>
+</div>
+
+<!-- 🔹 AI CONCIERGE BOX -->
+<section class="ai-assistant">
+    <div class="container">
+        <div class="ai-card">
+            <h3>🧠 AYA Concierge AI</h3>
+            <div class="ai-message">
+                Готова съм да ви помогна да намерите най-подходящата стая според вашия стил. ✨
+            </div>
+            <button id="askPetya" class="neural-btn-outline">🎯 Попитай AYA</button>
+        </div>
+    </div>
+</section>
+
+<script src="script.js"></script>
+<script src="petya-integration.js"></script>
+<script src="payment-system.js"></script>
+
+</body>
+</html>                        <option value="standard">Стандартна стая - $80/нощ</option>
                         <option value="deluxe">Делукс стая - $120/нощ</option>
                         <option value="suite">Луксозен апартамент - $200/нощ</option>
                     </select>
