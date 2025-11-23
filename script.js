@@ -44,19 +44,20 @@ function calculateTotal() {
     }
 
     const rate = ROOM_RATES[roomTypeValue];
-    const basePrice = rate * nights;
+    const basePrice = rate * nights * guests.value;
     const tax = basePrice * 0.18;
     const total = basePrice + tax;
 
-    roomPriceEl.textContent = `$${rate} × ${nights} нощувки = $${basePrice.toFixed(2)}`;
+    roomPriceEl.textContent = `$${rate} × ${nights} нощувки × ${guests.value} гост(и) = $${basePrice.toFixed(2)}`;
     taxAmountEl.textContent = `$${tax.toFixed(2)}`;
     totalPrice.textContent = `$${total.toFixed(2)}`;
 }
 
-// AI Recommendation
+// AI Suggestion
 function generateAISuggestion() {
     const roomTypeValue = roomType.value;
     const nights = calculateNights();
+    const guestCount = guests.value;
 
     if (!roomTypeValue || nights === 0) {
         aiSuggestionBox.innerHTML =
@@ -67,19 +68,19 @@ function generateAISuggestion() {
     let suggestion = "";
 
     if (roomTypeValue === "standard") {
-        suggestion = `📌 Стандартната стая е подходяща за кратки престои и оптимална цена.`;
+        suggestion = `📌 Стандартната стая е чудесна за краткосрочен престой и оптимален бюджет.`;
     } else if (roomTypeValue === "deluxe") {
-        suggestion = `💎 Делукс стаята предлага повече комфорт и уют – идеална за двойки.`;
+        suggestion = `💎 Делукс стаята предлага повече комфорт – идеална за двойки и романтични пътувания.`;
     } else if (roomTypeValue === "suite") {
-        suggestion = `👑 Луксозният апартамент е най-подходящ за престижно и VIP изживяване.`;
+        suggestion = `👑 Луксозният апартамент е най-добър за пространство, престиж и VIP изживяване.`;
     }
 
     aiSuggestionBox.innerHTML =
-        `🧠 AYA препоръчва:<br>${suggestion}<br>⏳ Продължителност: ${nights} нощувки`;
+        `🧠 AYA препоръчва:<br>${suggestion}<br>🛏 Нощувки: ${nights}<br>👥 Гости: ${guestCount}`;
 }
 
 // Event Listeners
-[roomType, checkIn, checkOut].forEach(input => {
+[roomType, checkIn, checkOut, guests].forEach(input => {
     input.addEventListener("change", () => {
         calculateTotal();
         generateAISuggestion();
