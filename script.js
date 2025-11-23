@@ -1,22 +1,38 @@
 // ===============================
-//  Booking Calculation – AYA Smart
+//  AYA Smart Hotels – Booking Logic
 // ===============================
 
+// DOM Elements
 const roomType = document.getElementById("roomType");
 const checkIn = document.getElementById("checkIn");
 const checkOut = document.getElementById("checkOut");
+const guests = document.getElementById("guests");
 const totalPrice = document.getElementById("totalPrice");
 const roomPriceEl = document.getElementById("roomPrice");
 const taxAmountEl = document.getElementById("taxAmount");
+const aiSuggestionBox = document.getElementById("aiSuggestion");
 
+// Room Rates
 const ROOM_RATES = {
     standard: 80,
     deluxe: 120,
     suite: 200
 };
 
-// Calculate nights based on selected dates   
-    function calculateTotal() {
+// Calculate number of nights
+function calculateNights() {
+    if (!checkIn.value || !checkOut.value) return 0;
+
+    const start = new Date(checkIn.value);
+    const end = new Date(checkOut.value);
+    const diffTime = end - start;
+    const nights = diffTime / (1000 * 60 * 60 * 24);
+
+    return nights > 0 ? nights : 0;
+}
+
+// Calculate total cost
+function calculateTotal() {
     const nights = calculateNights();
     const roomTypeValue = roomType.value;
 
@@ -32,116 +48,43 @@ const ROOM_RATES = {
     const tax = basePrice * 0.18;
     const total = basePrice + tax;
 
-    // 🔹 Нов ред — показваме броя нощувки
     roomPriceEl.textContent = `$${rate} × ${nights} нощувки = $${basePrice.toFixed(2)}`;
     taxAmountEl.textContent = `$${tax.toFixed(2)}`;
     totalPrice.textContent = `$${total.toFixed(2)}`;
 }
-    const rate = ROOM_RATES[roomTypeValue];
-    const basePrice = rate * nights;
-    const tax = basePrice * 0.18;
-    const total = basePrice + tax;
 
-    roomPriceEl.textContent = `$${rate.toFixed(2)} × ${nights} нощувки = $${basePrice.toFixed(2)}`;sePrice.toFixed(2)}`;
-    taxAmountEl.textContent = `$${tax.toFixed(2)}`;
-    totalPrice.textContent = `$${total.toFixed(2)}`;
+// AI Recommendation
+function generateAISuggestion() {
+    const roomTypeValue = roomType.value;
+    const nights = calculateNights();
+
+    if (!roomTypeValue || nights === 0) {
+        aiSuggestionBox.innerHTML =
+            `🧠 AYA препоръчва: Моля, изберете стая и дати за престой.`;
+        return;
+    }
+
+    let suggestion = "";
+
+    if (roomTypeValue === "standard") {
+        suggestion = `📌 Стандартната стая е подходяща за кратки престои и оптимална цена.`;
+    } else if (roomTypeValue === "deluxe") {
+        suggestion = `💎 Делукс стаята предлага повече комфорт и уют – идеална за двойки.`;
+    } else if (roomTypeValue === "suite") {
+        suggestion = `👑 Луксозният апартамент е най-подходящ за престижно и VIP изживяване.`;
+    }
+
+    aiSuggestionBox.innerHTML =
+        `🧠 AYA препоръчва:<br>${suggestion}<br>⏳ Продължителност: ${nights} нощувки`;
 }
 
+// Event Listeners
 [roomType, checkIn, checkOut].forEach(input => {
-    input.addEventListener("change", calculateTotal);
+    input.addEventListener("change", () => {
+        calculateTotal();
+        generateAISuggestion();
+    });
 });
 
-// Trigger initial calculation
-calculateTotal();        document.getElementById('guests').addEventListener('change', () => {
-            this.updatePrices();
-            this.getAIRecommendation();
-        });
-
-        // Book button
-        document.getElementById('bookBtn').addEventListener('click', () => {
-            this.handleBooking();
-        });
-
-        // AI Assistant
-        document.getElementById('askPetya').addEventListener('click', () => {
-            this.askPetyaAssistant();
-        });
-    }
-
-    updatePrices() {
-        const roomType = document.getElementById('roomType').value;
-        const roomPrice = this.roomPrices[roomType];
-        const guests = parseInt(document.getElementById('guests').value) || 2;
-        
-        // Calculate nights (simplified)
-        const nights = 1; // In real app, calculate from dates
-        
-        const totalBeforeTax = roomPrice * nights;
-        const taxAmount = (totalBeforeTax * this.taxRate) / 100;
-        const totalPrice = totalBeforeTax + taxAmount;
-
-        // Update UI
-        document.getElementById('roomPrice').textContent = `$${totalBeforeTax}`;
-        document.getElementById('taxAmount').textContent = `$${taxAmount.toFixed(2)}`;
-        document.getElementById('totalPrice').textContent = `$${totalPrice.toFixed(2)}`;
-    }
-
-    getAIRecommendation() {
-        const roomType = document.getElementById('roomType').value;
-        const guests = parseInt(document.getElementById('guests').value) || 2;
-        
-        let recommendation = "";
-        
-        switch(roomType) {
-            case 'standard':
-                recommendation = "🎯 Стандартната стая е перфектна за кратки бизнес пътувания или solo пътници.";
-                break;
-            case 'deluxe':
-                recommendation = "💫 Делукс стаята предлага допълнително пространство и луксозни услуги - идеална за двойки.";
-                break;
-            case 'suite':
-                recommendation = "👑 Луксозният апартамент е перфектен за семейства или специални поводи. Включва complimentary услуги!";
-                break;
-        }
-
-        if (guests > 2) {
-            recommendation += " Препоръчвам стая с допълнително легло или свързани стаи.";
-        }
-
-        document.getElementById('aiSuggestion').textContent = recommendation;
-    }
-
-    handleBooking() {
-        const roomType = document.getElementById('roomType').value;
-        const totalPrice = document.getElementById('totalPrice').textContent;
-        
-        // Integrate with payment system
-        if (window.NeuralPaymentSystem) {
-            window.NeuralPaymentSystem.processBooking({
-                roomType: roomType,
-                totalPrice: totalPrice,
-                guests: document.getElementById('guests').value
-            });
-        } else {
-            alert(`✅ Резервацията е успешна! Обща сума: ${totalPrice}\nЩе се свържем с вас за потвърждение.`);
-        }
-    }
-
-    askPetyaAssistant() {
-        const questions = [
-            "🎯 Коя стая препоръчвате за романтична почивка?",
-            "💼 Имате ли стаи, подходящи за бизнес срещи?",
-            "👪 Кои стаи са най-добри за семейства с деца?",
-            "🌅 Кои стаи имат най-добър изглед?",
-            "💸 Имате ли специални оферти за дългосрочен престой?"
-        ];
-        
-        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-        alert(`🧠 ПЕТЯ: ${randomQuestion}\n\nОтговорът ще бъде включен в следващата версия!`);
-    }
-}
-
-// Initialize system when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    new NeuralHotelSystem();
-});
+// Initial load
+calculateTotal();
