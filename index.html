@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<!-- 🔹 AYA PREMIUM NAVBAR -->
 <nav class="neural-nav">
     <div class="nav-brand">
         <h2>AYA Smart Hotels</h2>
@@ -17,7 +16,6 @@
     </div>
 </nav>
 
-<!-- 🔹 HERO SECTION -->
 <header class="hero">
     <div class="hero-content">
         <h1>Открийте Вашия Перфектен Престой</h1>
@@ -25,7 +23,6 @@
     </div>
 </header>
 
-<!-- 🔹 BOOKING CARD -->
 <div class="container">
     <div class="booking-card neural-glow">
         <h3>🎯 Резервирайте Вашата Стая</h3>
@@ -45,11 +42,11 @@
 
         <div class="form-group">
             <label>👥 Гости:</label>
-            <input type="number" id="guests" class="neural-input" value="2" min="1" max="4" />
+            <input type="number" id="guests" class="neural-input" value="2" min="1" max="10" />
         </div>
 
         <div id="aiSuggestion" class="ai-recommendation">
-            🧠 AI Concierge препоръчва: Изберете стая и дати за препоръка.
+            🧠 AYA препоръчва: Изберете стая и дати за препоръка.
         </div>
 
         <div class="price-summary">
@@ -62,22 +59,24 @@
     </div>
 </div>
 
-<!-- 🔹 AI CONCIERGE BOX -->
-<section class="ai-assistant">
-    <div class="container">
-        <div class="ai-card">
-            <h3>🧠 AYA Concierge AI</h3>
-            <div class="ai-message">
-                Готова съм да ви помогна да намерите най-подходящата стая според вашия стил. ✨
-            </div>
-            <button id="askPetya" class="neural-btn-outline">🎯 Попитай AYA</button>
-        </div>
-    </div>
-</section>
+<!-- Floating Chat Bubble -->
+<div id="ayaBubble" class="aya-bubble">💬</div>
+
+<div id="ayaChat" class="aya-chat-box">
+  <div class="aya-chat-header">
+    🧠 AYA Concierge AI
+    <span id="closeChat" class="close-chat">✖</span>
+  </div>
+  <div class="aya-chat-content" id="ayaChatContent">
+    Здравейте! Аз съм AYA – вашият AI Concierge.  
+    🏨 Готова съм да ви помогна с стаи, престой или специални желания.
+  </div>
+</div>
 
 <script src="script.js"></script>
 <script src="petya-integration.js"></script>
 <script src="payment-system.js"></script>
+<script src="aya-chat.js"></script>
 
 </body>
 </html>
