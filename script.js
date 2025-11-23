@@ -1,40 +1,60 @@
-// NEURAL HOTEL BOOKING SYSTEM
-class NeuralHotelSystem {
-    constructor() {
-        this.roomPrices = {
-            standard: 80,
-            deluxe: 120,
-            suite: 200
-        };
-        this.taxRate = 18;
-        this.init();
+// ===============================
+//  Booking Calculation – AYA Smart
+// ===============================
+
+const roomType = document.getElementById("roomType");
+const checkIn = document.getElementById("checkIn");
+const checkOut = document.getElementById("checkOut");
+const totalPrice = document.getElementById("totalPrice");
+const roomPriceEl = document.getElementById("roomPrice");
+const taxAmountEl = document.getElementById("taxAmount");
+
+const ROOM_RATES = {
+    standard: 80,
+    deluxe: 120,
+    suite: 200
+};
+
+// Calculate nights based on selected dates
+function calculateNights() {
+    if (!checkIn.value || !checkOut.value) return 0;
+
+    const start = new Date(checkIn.value);
+    const end = new Date(checkOut.value);
+
+    const diffTime = end - start; 
+    const nights = diffTime / (1000 * 60 * 60 * 24);
+
+    return nights > 0 ? nights : 0;
+}
+
+function calculateTotal() {
+    const nights = calculateNights();
+    const roomTypeValue = roomType.value;
+
+    if (!ROOM_RATES[roomTypeValue] || nights === 0) {
+        totalPrice.textContent = "$0";
+        roomPriceEl.textContent = "$0";
+        taxAmountEl.textContent = "$0";
+        return;
     }
 
-    init() {
-        this.bindEvents();
-        this.updatePrices();
-    }
+    const rate = ROOM_RATES[roomTypeValue];
+    const basePrice = rate * nights;
+    const tax = basePrice * 0.18;
+    const total = basePrice + tax;
 
-    bindEvents() {
-        // Room selection change
-        document.getElementById('roomType').addEventListener('change', () => {
-            this.updatePrices();
-            this.getAIRecommendation();
-        });
+    roomPriceEl.textContent = `$${basePrice.toFixed(2)}`;
+    taxAmountEl.textContent = `$${tax.toFixed(2)}`;
+    totalPrice.textContent = `$${total.toFixed(2)}`;
+}
 
-        // Date changes
-        document.getElementById('checkIn').addEventListener('change', () => {
-            this.updatePrices();
-            this.getAIRecommendation();
-        });
+[roomType, checkIn, checkOut].forEach(input => {
+    input.addEventListener("change", calculateTotal);
+});
 
-        document.getElementById('checkOut').addEventListener('change', () => {
-            this.updatePrices();
-            this.getAIRecommendation();
-        });
-
-        // Guests change
-        document.getElementById('guests').addEventListener('change', () => {
+// Trigger initial calculation
+calculateTotal();        document.getElementById('guests').addEventListener('change', () => {
             this.updatePrices();
             this.getAIRecommendation();
         });
