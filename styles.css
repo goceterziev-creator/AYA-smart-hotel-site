@@ -316,3 +316,55 @@ label {
     background: var(--neural-primary);
     color: white;
 }
+/* ===============================
+   PRICE & BOOKING BUTTON FIX – AYA
+=============================== */
+
+.price-summary {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.price-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    color: #333;
+}
+
+.price-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--aya-deep-black);
+}
+
+/* BOOK BUTTON */
+#bookBtn {
+    margin-top: 20px;
+    background: var(--aya-gradient);
+    color: var(--aya-white);
+    padding: 1rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1rem;
+}
+
+#bookBtn:hover {
+    box-shadow: 0 0 12px var(--aya-turquoise);
+    transform: translateY(-2px);
+}
+
+/* Ensure booking card spacing */
+.booking-card {
+    margin-bottom: 2rem;
+}
