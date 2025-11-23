@@ -1,40 +1,54 @@
-// PЕТЯ AI INTEGRATION FOR HOTEL SYSTEM
-class PetyaHotelAI {
-    constructor() {
-        this.name = "ПЕТЯ Hotel AI";
-        this.version = "2.0";
-        this.init();
+// ===============================
+//  AYA Concierge AI – Integration
+// ===============================
+
+// Replace PETYA name everywhere
+const assistantName = "AYA Concierge AI";
+
+// AI greeting message
+const aiGreeting = `
+✨ Здравейте! Аз съм AYA – вашият персонален AI Concierge.  
+Помагам ви да изберете най-подходящата стая според стил, комфорт, бюджет и продължителност на престой. 🏨💫  
+Попитайте ме смело – аз мисля вместо вас! 🧠
+`;
+
+// DOM elements
+const askPetyaBtn = document.getElementById("askPetya");
+const aiSuggestionBox = document.getElementById("aiSuggestion");
+
+// Handle AI Suggestion
+function generateAISuggestion() {
+    const roomType = document.getElementById("roomType").value;
+    const checkIn = document.getElementById("checkIn").value;
+    const checkOut = document.getElementById("checkOut").value;
+    const guests = document.getElementById("guests").value;
+
+    if (!roomType || !checkIn || !checkOut) {
+        aiSuggestionBox.innerHTML =
+            "🧠 AYA препоръчва: Моля, въведете стая, дати и гости.";
+        return;
     }
 
-    init() {
-        console.log(`🏨 ${this.name} v${this.version} - Активирана`);
-        this.injectAIFeatures();
+    let suggestion = "";
+
+    if (roomType === "standard") {
+        suggestion = `📌 За кратки престои и оптимална цена, Стандартната стая е чудесен избор. `;
+    } else if (roomType === "deluxe") {
+        suggestion = `💎 Делукс стаята предлага по-високо ниво на комфорт – идеална за двойки и романтични уикенди. `;
+    } else if (roomType === "suite") {
+        suggestion = `👑 Луксозният апартамент е най-добрият вариант за престижно изживяване, повече пространство и VIP конфиденциалност. `;
     }
 
-    injectAIFeatures() {
-        // Add AI personality to the system
-        this.createAIVoice();
-        this.setupSmartRecommendations();
-    }
+    aiSuggestionBox.innerHTML =
+        `🧠 ${assistantName} препоръчва:<br>${suggestion}<br>
+         Продължителност: ${checkIn} → ${checkOut}<br>
+         Гости: ${guests}`;
+}
 
-    createAIVoice() {
-        const aiMessages = [
-            "Здравейте! Аз съм ПЕТЯ, вашият AI асистент за резервации. 🧠",
-            "Готов съм да ви помогна да намерите перфектната стая! 🏨",
-            "Моите алгоритми анализират 15+ фактора за оптимална препоръка! ⚡"
-        ];
-
-        // Rotate AI messages
-        let messageIndex = 0;
-        setInterval(() => {
-            const aiElement = document.querySelector('.ai-message');
-            if (aiElement) {
-                aiElement.textContent = aiMessages[messageIndex];
-                messageIndex = (messageIndex + 1) % aiMessages.length;
-            }
-        }, 5000);
-    }
-
+// On Ask AYA button click
+askPetyaBtn.addEventListener("click", function () {
+    alert(aiGreeting);
+});
     setupSmartRecommendations() {
         // Advanced AI recommendation logic
         this.recommendationEngine = {
