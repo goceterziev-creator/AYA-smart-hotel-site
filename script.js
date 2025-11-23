@@ -44,7 +44,7 @@ function calculateTotal() {
     const tax = basePrice * 0.18;
     const total = basePrice + tax;
 
-    roomPriceEl.textContent = `$${basePrice.toFixed(2)}`;
+    roomPriceEl.textContent = `$${rate.toFixed(2)} × ${nights} нощувки = $${basePrice.toFixed(2)}`;sePrice.toFixed(2)}`;
     taxAmountEl.textContent = `$${tax.toFixed(2)}`;
     totalPrice.textContent = `$${total.toFixed(2)}`;
 }
