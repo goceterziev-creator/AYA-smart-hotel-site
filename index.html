@@ -77,6 +77,137 @@
 <script src="petya-integration.js"></script>
 <script src="payment-system.js"></script>
 <script src="aya-chat.js"></script>
+// AYA ↔ EIRA V2 Live Integration (Silent AI Infrastructure)
+class AYAEIRAIntegration {
+  constructor() {
+    this.init();
+  }
 
+  init() {
+    // Проверяваме дали EIRA е налична
+    if (typeof window.EIRA?.addSuggestion !== 'function') {
+      console.warn('⚠️ EIRA V2 не е заредена. Price Hunter работи в demo режим.');
+    }
+
+    const uiEl = document.getElementById('aiSuggestion');
+    const roomTypeEl = document.getElementById('roomType');
+    const checkInEl = document.getElementById('checkIn');
+    const checkOutEl = document.getElementById('checkOut');
+    const guestsEl = document.getElementById('guests');
+
+    if (!uiEl || !roomTypeEl || !checkInEl || !checkOutEl || !guestsEl) return;
+
+    const hunter = this;
+    let lastRunId = 0;
+
+    async function run() {
+      const roomType = roomTypeEl.value;
+      const checkIn = checkInEl.value;
+      const checkOut = checkOutEl.value;
+      const guests = parseInt(guestsEl.value || '2', 10);
+
+      if (!checkIn || !checkOut) {
+        uiEl.textContent = '🧠 AYA: Избери дати за препоръка.';
+        return;
+      }
+      if (hunter.getNights(checkIn, checkOut) <= 0) {
+        uiEl.textContent = '🧠 AYA: Check-out трябва да е след Check-in.';
+        return;
+      }
+
+      const runId = ++lastRunId;
+      uiEl.textContent = '🧠 AYA Price Hunter: търся най-добра цена...';
+
+      try {
+        // SIMULIRAME търсене (замени с реален API ако искаш)
+        await new Promise(r => setTimeout(r, 800));
+        if (runId !== lastRunId) return;
+
+        const localPrice = hunter.getLocalPrice();
+        const nights = hunter.getNights(checkIn, checkOut);
+        const localTotal = localPrice * nights;
+
+        // Demo оферти (можеш да ги замениш с реални)
+        const offers = [
+          { provider: 'Booking.com', total: localTotal * 0.92, currency: 'USD', url: 'https://booking.com' },
+          { provider: 'Hotels.com', total: localTotal * 0.88, currency: 'USD', url: 'https://hotels.com' },
+          { provider: 'Direct OTA', total: localTotal * 0.95, currency: 'USD', url: '#' }
+        ];
+        offers.sort((a, b) => a.total - b.total);
+        const best = offers[0];
+        const savings = Math.round(localTotal - best.total);
+
+        if (savings > 0) {
+          uiEl.innerHTML = `
+            🧠 AYA: <b>$${best.total.toFixed(0)}</b> (${best.provider})<br>
+            💰 Спестяваш <b>$${savings}</b>! <a href="${best.url}" target="_blank">Отвори</a>
+          `;
+          
+          // 🔥 EIRA INTEGRATION - изпращаме към EIRA V2
+          if (window.EIRA?.addSuggestion) {
+            window.EIRA.addSuggestion({
+              type: 'price_hunt',
+              source: 'AYA Smart Price Hunter',
+              text: `Намерих по-добра цена: $${best.total.toFixed(0)} (${best.provider}), спестяваш ~$${savings}`,
+              payload: {
+                localTotal,
+                bestPrice: best.total,
+                savings,
+                provider: best.provider,
+                roomType,
+                checkIn,
+                checkOut,
+                guests,
+                nights
+              }
+            });
+          }
+        } else {
+          uiEl.textContent = '🧠 AYA: Текущата цена е най-добра.';
+          
+          // Изпращаме и "no better deal" към EIRA
+          if (window.EIRA?.addSuggestion) {
+            window.EIRA.addSuggestion({
+              type: 'price_hunt',
+              source: 'AYA Smart Price Hunter',
+              text: 'Текущата цена изглежда най-добра за тези дати.',
+              payload: { localTotal, roomType, checkIn, checkOut, guests }
+            });
+          }
+        }
+      } catch (e) {
+        uiEl.textContent = '🧠 AYA: Опитай пак.';
+        console.warn(e);
+      }
+    }
+
+    // Методи
+    hunter.getLocalPrice = () => {
+      const text = roomTypeEl.options[roomTypeEl.selectedIndex]?.textContent || '';
+      const match = text.match(/$(d+)/);
+      return match ? Number(match[1]) : 0;
+    };
+
+    hunter.getNights = (checkIn, checkOut) => {
+      const diff = new Date(checkOut) - new Date(checkIn);
+      return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    };
+
+    // Hook към промени
+    ['change', 'input'].forEach(ev => {
+      roomTypeEl.addEventListener(ev, run);
+      checkInEl.addEventListener(ev, run);
+      checkOutEl.addEventListener(ev, run);
+      guestsEl.addEventListener(ev, run);
+    });
+
+    // Първи run
+    setTimeout(run, 500);
+  }
+}
+
+// 🚀 Стартираме
+new AYAEIRAIntegration();
+      </script>
 </body>
 </html>
