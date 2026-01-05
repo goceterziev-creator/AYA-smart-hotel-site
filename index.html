@@ -1,213 +1,27 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AYA Smart Hotels – AI Concierge Booking</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="responsive.css" />
+  <meta charset="UTF-8" />
+  <title>AYA Smart Hotel — AI Concierge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 16px}
+    h1{font-size:32px}
+    .cta{display:inline-block;margin-top:20px;padding:14px 22px;background:#000;color:#fff;text-decoration:none}
+    ul{margin-left:18px}
+  </style>
 </head>
 <body>
-
-<nav class="neural-nav">
-    <div class="nav-brand">
-        <h2>AYA Smart Hotels</h2>
-        <span class="ai-badge">AI Concierge</span>
-    </div>
-</nav>
-
-<header class="hero">
-    <div class="hero-content">
-        <h1>Открийте Вашия Перфектен Престой</h1>
-        <p>AI-асистирани резервации с лукс, комфорт и интелект</p>
-    </div>
-</header>
-
-<div class="container">
-    <div class="booking-card neural-glow">
-        <h3>🎯 Резервирайте Вашата Стая</h3>
-
-        <label>Изберете Стая:</label>
-        <select id="roomType" class="neural-select">
-            <option value="standard">Стандартна стая - $80/нощ</option>
-            <option value="deluxe">Делукс стая - $120/нощ</option>
-            <option value="suite">Луксозен апартамент - $200/нощ</option>
-        </select>
-
-        <div class="form-group">
-            <label>📅 Дати на престой:</label>
-            <input type="date" id="checkIn" class="neural-input" />
-            <input type="date" id="checkOut" class="neural-input" />
-        </div>
-
-        <div class="form-group">
-            <label>👥 Гости:</label>
-            <input type="number" id="guests" class="neural-input" value="2" min="1" max="10" />
-        </div>
-
-        <div id="aiSuggestion" class="ai-recommendation">
-            🧠 AYA препоръчва: Изберете стая и дати за препоръка.
-        </div>
-
-        <div class="price-summary">
-            <div class="price-line"><span>Цена на стая:</span><span id="roomPrice">$0</span></div>
-            <div class="price-line"><span>Такси и данъци (18%):</span><span id="taxAmount">$0</span></div>
-            <div class="price-total"><span>Общо:</span><span id="totalPrice">$0</span></div>
-        </div>
-
-        <button id="bookBtn" class="neural-btn">🚀 Резервирай Сега</button>
-    </div>
-</div>
-
-<!-- Floating Chat Bubble -->
-<div id="ayaBubble" class="aya-bubble">💬</div>
-
-<div id="ayaChat" class="aya-chat-box">
-  <div class="aya-chat-header">
-    🧠 AYA Concierge AI
-    <span id="closeChat" class="close-chat">✖</span>
-  </div>
-  <div class="aya-chat-content" id="ayaChatContent">
-    Здравейте! Аз съм AYA – вашият AI Concierge.  
-    🏨 Готова съм да ви помогна с стаи, престой или специални желания.
-  </div>
-</div>
-
-<script src="script.js"></script>
-<script src="petya-integration.js"></script>
-<script src="payment-system.js"></script>
-<script src="aya-chat.js"></script>
-// AYA ↔ EIRA V2 Live Integration (Silent AI Infrastructure)
-class AYAEIRAIntegration {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    // Проверяваме дали EIRA е налична
-    if (typeof window.EIRA?.addSuggestion !== 'function') {
-      console.warn('⚠️ EIRA V2 не е заредена. Price Hunter работи в demo режим.');
-    }
-
-    const uiEl = document.getElementById('aiSuggestion');
-    const roomTypeEl = document.getElementById('roomType');
-    const checkInEl = document.getElementById('checkIn');
-    const checkOutEl = document.getElementById('checkOut');
-    const guestsEl = document.getElementById('guests');
-
-    if (!uiEl || !roomTypeEl || !checkInEl || !checkOutEl || !guestsEl) return;
-
-    const hunter = this;
-    let lastRunId = 0;
-
-    async function run() {
-      const roomType = roomTypeEl.value;
-      const checkIn = checkInEl.value;
-      const checkOut = checkOutEl.value;
-      const guests = parseInt(guestsEl.value || '2', 10);
-
-      if (!checkIn || !checkOut) {
-        uiEl.textContent = '🧠 AYA: Избери дати за препоръка.';
-        return;
-      }
-      if (hunter.getNights(checkIn, checkOut) <= 0) {
-        uiEl.textContent = '🧠 AYA: Check-out трябва да е след Check-in.';
-        return;
-      }
-
-      const runId = ++lastRunId;
-      uiEl.textContent = '🧠 AYA Price Hunter: търся най-добра цена...';
-
-      try {
-        // SIMULIRAME търсене (замени с реален API ако искаш)
-        await new Promise(r => setTimeout(r, 800));
-        if (runId !== lastRunId) return;
-
-        const localPrice = hunter.getLocalPrice();
-        const nights = hunter.getNights(checkIn, checkOut);
-        const localTotal = localPrice * nights;
-
-        // Demo оферти (можеш да ги замениш с реални)
-        const offers = [
-          { provider: 'Booking.com', total: localTotal * 0.92, currency: 'USD', url: 'https://booking.com' },
-          { provider: 'Hotels.com', total: localTotal * 0.88, currency: 'USD', url: 'https://hotels.com' },
-          { provider: 'Direct OTA', total: localTotal * 0.95, currency: 'USD', url: '#' }
-        ];
-        offers.sort((a, b) => a.total - b.total);
-        const best = offers[0];
-        const savings = Math.round(localTotal - best.total);
-
-        if (savings > 0) {
-          uiEl.innerHTML = `
-            🧠 AYA: <b>$${best.total.toFixed(0)}</b> (${best.provider})<br>
-            💰 Спестяваш <b>$${savings}</b>! <a href="${best.url}" target="_blank">Отвори</a>
-          `;
-          
-          // 🔥 EIRA INTEGRATION - изпращаме към EIRA V2
-          if (window.EIRA?.addSuggestion) {
-            window.EIRA.addSuggestion({
-              type: 'price_hunt',
-              source: 'AYA Smart Price Hunter',
-              text: `Намерих по-добра цена: $${best.total.toFixed(0)} (${best.provider}), спестяваш ~$${savings}`,
-              payload: {
-                localTotal,
-                bestPrice: best.total,
-                savings,
-                provider: best.provider,
-                roomType,
-                checkIn,
-                checkOut,
-                guests,
-                nights
-              }
-            });
-          }
-        } else {
-          uiEl.textContent = '🧠 AYA: Текущата цена е най-добра.';
-          
-          // Изпращаме и "no better deal" към EIRA
-          if (window.EIRA?.addSuggestion) {
-            window.EIRA.addSuggestion({
-              type: 'price_hunt',
-              source: 'AYA Smart Price Hunter',
-              text: 'Текущата цена изглежда най-добра за тези дати.',
-              payload: { localTotal, roomType, checkIn, checkOut, guests }
-            });
-          }
-        }
-      } catch (e) {
-        uiEl.textContent = '🧠 AYA: Опитай пак.';
-        console.warn(e);
-      }
-    }
-
-    // Методи
-    hunter.getLocalPrice = () => {
-      const text = roomTypeEl.options[roomTypeEl.selectedIndex]?.textContent || '';
-      const match = text.match(/$(d+)/);
-      return match ? Number(match[1]) : 0;
-    };
-
-    hunter.getNights = (checkIn, checkOut) => {
-      const diff = new Date(checkOut) - new Date(checkIn);
-      return Math.ceil(diff / (1000 * 60 * 60 * 24));
-    };
-
-    // Hook към промени
-    ['change', 'input'].forEach(ev => {
-      roomTypeEl.addEventListener(ev, run);
-      checkInEl.addEventListener(ev, run);
-      checkOutEl.addEventListener(ev, run);
-      guestsEl.addEventListener(ev, run);
-    });
-
-    // Първи run
-    setTimeout(run, 500);
-  }
-}
-
-// 🚀 Стартираме
-new AYAEIRAIntegration();
-      </script>
+  <h1>AYA Smart Hotel — AI Concierge & Store</h1>
+  <p>Персонален AI Concierge за хотели и апартаменти. 24/7 обслужване, upsell и автоматизация — без сложни инсталации.</p>
+  <h3>Какво получавате</h3>
+  <ul>
+    <li>AI Concierge (чат + логика)</li>
+    <li>Готови сценарии за гости</li>
+    <li>Upsell & service flow</li>
+    <li>Бърз старт</li>
+  </ul>
+  <p><strong>Подходящо за:</strong> малки и средни хотели, апарт хотели, ваканционни имоти.</p>
+  <a class="cta" href="https://wa.me/359XXXXXXXXX">Заяви демо</a>
 </body>
 </html>
